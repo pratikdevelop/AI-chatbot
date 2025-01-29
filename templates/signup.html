@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+    <div class="bg-white p-8 rounded shadow-lg w-96">
+        <h2 class="text-2xl font-semibold text-center mb-6">Sign Up</h2>
+        <form id="signupForm" class="space-y-4">
+            <!-- CSRF Token Field -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" name="username" id="username" required
+                    class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                    placeholder="Enter your username"
+                    pattern="[A-Za-z0-9]{4,20}"
+                    title="4-20 characters (letters and numbers only)">
+            </div>
+            
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" name="email" id="email" required
+                    class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                    placeholder="Enter your email"
+                    autocomplete="email">
+            </div>
+            
+            <div class="mb-4 relative">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" name="password" id="password" required
+                    class="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                    placeholder="Enter your password"
+                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                    title="8+ chars with uppercase, lowercase, and numbers"
+                    autocomplete="new-password">
+                <div id="password-strength" class="hidden text-xs mt-1"></div>
+            </div>
+
+            <div id="error-message" class="hidden text-red-500 text-sm mb-4"></div>
+            <div id="success-message" class="hidden text-green-500 text-sm mb-4"></div>
+
+            <button type="submit" 
+                    class="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors relative"
+                    id="submitBtn">
+                <span class="submit-text">Sign Up</span>
+                <span class="loading hidden absolute inset-0 flex items-center justify-center">
+                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </span>
+            </button>
+        </form>
+        <p class="mt-4 text-center text-sm">
+            Already have an account? 
+            <a href="{{ url_for('login') }}" class="text-blue-500 hover:text-blue-700">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = submitBtn.querySelector('.loading');
+            const submitText = submitBtn.querySelector('.submit-text');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+
+            submitBtn.disabled = true;
+            loading.classList.remove('hidden');
+            submitText.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            successMessage.classList.add('hidden');
+
+            try {
+                const formData = {
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value,
+                    csrf_token: document.querySelector('input[name="csrf_token"]').value
+                };
+
+                const response = await fetch('/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Registration failed');
+                }
+
+                successMessage.textContent = 'Registration successful! Redirecting...';
+                successMessage.classList.remove('hidden');
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 1500);
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+                loading.classList.add('hidden');
+                submitText.classList.remove('hidden');
+            }
+        });
+
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function(e) {
+            const strength = calculatePasswordStrength(e.target.value);
+            const strengthElement = document.getElementById('password-strength');
+            strengthElement.classList.remove('hidden');
+            
+            let message = '';
+            let color = 'red';
+            if (strength < 2) {
+                message = 'Weak';
+            } else if (strength < 4) {
+                message = 'Medium';
+                color = 'orange';
+            } else {
+                message = 'Strong';
+                color = 'green';
+            }
+            
+            strengthElement.textContent = `Password Strength: ${message}`;
+            strengthElement.style.color = color;
+        });
+
+        function calculatePasswordStrength(password) {
+            let strength = 0;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^A-Za-z0-9]/)) strength++;
+            if (password.length >= 8) strength++;
+            return strength;
+        }
+    </script>
+</body>
+</html>

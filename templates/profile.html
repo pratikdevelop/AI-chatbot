@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+
+    <div class="bg-white p-8 rounded shadow-lg w-96">
+        <h2 class="text-2xl font-semibold text-center mb-6">Your Profile</h2>
+
+        <!-- Profile Picture -->
+        <div class="mb-4 text-center">
+            {% if user.profile_picture %}
+            <img src="{{ url_for('uploaded_file', filename=user.profile_picture) }}" alt="Profile Picture"
+                class="w-32 h-32 rounded-full mx-auto">
+            {% else %}
+            <div class="w-32 h-32 bg-gray-300 rounded-full mx-auto"></div>
+            {% endif %}
+        </div>
+
+        <!-- Update Profile -->
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mb-4">
+                <label for="profile_picture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
+                <input type="file" name="profile_picture" id="profile_picture"
+                    class="mt-1 p-2 w-full border border-gray-300 rounded-md">
+            </div>
+            <div class="mb-4">
+                <label for="preferences" class="block text-sm font-medium text-gray-700">Preferences (JSON
+                    format)</label>
+                <textarea name="preferences" rows="4"
+                    class="mt-1 p-2 w-full border border-gray-300 rounded-md">{{ user.get_preferences() }}</textarea>
+            </div>
+            <button type="submit" class="w-full py-2 bg-blue-500 text-white rounded-md">Save Changes</button>
+        </form>
+
+        <!-- Chat History -->
+        <h3 class="mt-6 text-xl font-semibold">Chat History</h3>
+        <ul class="mt-2">
+            {% for chat in user.get_chat_history() %}
+            <li class="mb-2">
+                <strong>You:</strong> {{ chat.user }} <br>
+                <strong>Bot:</strong> {{ chat.response }}
+            </li>
+            {% endfor %}
+        </ul>
+
+        <p class="mt-4 text-center text-sm"><a href="{{ url_for('logout') }}" class="text-blue-500">Logout</a></p>
+    </div>
+
+</body>
+
+</html>
