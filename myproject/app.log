@@ -2,3 +2,43 @@
 2025-03-06 12:36:58,914 INFO: /home/pc-25/Music/AI-chatbot/myproject/chatbot/views.py changed, reloading.
 2025-03-06 12:37:02,851 INFO: Watching for file changes with StatReloader
 2025-03-06 12:55:13,178 INFO: Watching for file changes with StatReloader
+2025-03-07 06:51:07,259 INFO: Watching for file changes with StatReloader
+2025-03-07 06:55:46,465 INFO: "OPTIONS /api/signup HTTP/1.1" 200 0
+2025-03-07 06:55:47,822 ERROR: Internal Server Error: /api/signup
+Traceback (most recent call last):
+  File "/home/pc-25/Music/AI-chatbot/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc-25/Music/AI-chatbot/venv/lib/python3.12/site-packages/django/utils/deprecation.py", line 131, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc-25/Music/AI-chatbot/venv/lib/python3.12/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pc-25/Music/AI-chatbot/venv/lib/python3.12/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to localhost:8000/api/signup/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+2025-03-07 06:55:47,841 ERROR: "POST /api/signup HTTP/1.1" 500 73803
+2025-03-07 06:56:42,462 INFO: /home/pc-25/Music/AI-chatbot/myproject/chatbot/urls.py changed, reloading.
+2025-03-07 06:56:43,634 INFO: Watching for file changes with StatReloader
+2025-03-07 06:57:08,100 WARNING: Bad Request: /api/signup
+2025-03-07 06:57:08,100 WARNING: "POST /api/signup HTTP/1.1" 400 52
+2025-03-07 06:57:26,811 INFO: "POST /api/signup HTTP/1.1" 201 42
+2025-03-07 06:58:44,860 INFO: "OPTIONS /api/login HTTP/1.1" 200 0
+2025-03-07 06:58:45,096 WARNING: Unauthorized: /api/login
+2025-03-07 06:58:45,096 WARNING: "POST /api/login HTTP/1.1" 401 31
+2025-03-07 06:58:54,345 INFO: "POST /api/login HTTP/1.1" 200 524
+2025-03-07 07:02:08,515 INFO: "OPTIONS /api/chat HTTP/1.1" 200 0
+2025-03-07 07:02:08,653 WARNING: Bad Request: /api/chat
+2025-03-07 07:02:08,654 WARNING: "POST /api/chat HTTP/1.1" 400 33
+2025-03-07 07:03:09,211 INFO: /home/pc-25/Music/AI-chatbot/myproject/chatbot/chatbot.py changed, reloading.
+2025-03-07 07:03:10,211 INFO: Watching for file changes with StatReloader
+2025-03-07 07:03:18,045 INFO: "POST /api/chat HTTP/1.1" 200 23
+2025-03-07 07:03:38,051 INFO: "POST /api/chat HTTP/1.1" 200 23
+2025-03-07 09:11:32,065 INFO: Watching for file changes with StatReloader
+2025-03-07 09:12:32,411 INFO: "OPTIONS /api/chat HTTP/1.1" 200 0
+2025-03-07 09:12:33,733 WARNING: Unauthorized: /api/chat
+2025-03-07 09:12:33,733 WARNING: "POST /api/chat HTTP/1.1" 401 172
+2025-03-07 09:13:23,362 INFO: "OPTIONS /api/login HTTP/1.1" 200 0
+2025-03-07 09:13:23,625 INFO: "POST /api/login HTTP/1.1" 200 524
+2025-03-07 09:13:32,529 INFO: "POST /api/chat HTTP/1.1" 200 23
